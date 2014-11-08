@@ -2,15 +2,12 @@ package com.benjycap.drawshare;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -22,21 +19,10 @@ public class DrawView extends View {
 
     public static final String EXTRA_PAINTED_PATHS = "paintedPaths";
 
-    // PaintedPath encapsulates a Path, with a Paint to draw it
-    public class PaintedPath implements Serializable {
-        public final Path mPath;
-        public final Paint mPaint;
-
-        public PaintedPath(Path path, Paint paint) {
-            mPath = path;
-            mPaint = paint;
-        }
-    }
-
     // Painted Paths drawn by the user
-    private ArrayList<PaintedPath> mPaintedPaths;
-    public ArrayList<PaintedPath> getPaintedPaths() { return mPaintedPaths; }
-    public void setPaintedPaths(ArrayList<PaintedPath> paintedPaths) { mPaintedPaths = paintedPaths; }
+    private PaintedPathList mPaintedPaths;
+    public PaintedPathList getPaintedPaths() { return mPaintedPaths; }
+    public void setPaintedPaths(PaintedPathList paintedPaths) { mPaintedPaths = paintedPaths; }
 
     // Palette to be manipulated by the user
     private Palette mPalette;
@@ -52,9 +38,7 @@ public class DrawView extends View {
         public boolean onDoubleTap(MotionEvent e) {
             isDownFromDoubleTap = true;
 
-            if (!mPaintedPaths.isEmpty()) {
-                mPaintedPaths.remove(Math.max(0, mPaintedPaths.size() - 1));
-            }
+            mPaintedPaths.removeLast();
 
             return true;
         }
@@ -72,7 +56,7 @@ public class DrawView extends View {
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mPaintedPaths = new ArrayList<PaintedPath>();
+        mPaintedPaths = new PaintedPathList();
         isDrawingPath = false;
     }
 
@@ -90,11 +74,11 @@ public class DrawView extends View {
                 if (!mGestureListener.isDownFromDoubleTap) {
                     // Create new path if digit not already down
                     if (!isDrawingPath)
-                        startNewPath();
+                        mPaintedPaths.startNewPath(mPalette);
                     // Set down flag as true
                     isDrawingPath = true;
 
-                    PaintedPath currentPaintedPath = mPaintedPaths.get(mPaintedPaths.size() - 1);
+                    PaintedPath currentPaintedPath = mPaintedPaths.getCurrent();
                     Path currentPath = currentPaintedPath.mPath;
                     // Draw path
                     if (currentPath.isEmpty())
@@ -118,13 +102,6 @@ public class DrawView extends View {
         invalidate();
 
         return gestureResult || mainEvent;
-    }
-
-    // To be called after Palette has been updated to user's specifications
-    private void startNewPath() {
-        // New path only needed if PaintedPath array is empty or if current Path has been used
-        if (mPaintedPaths.isEmpty() || !mPaintedPaths.get(mPaintedPaths.size() - 1).mPath.isEmpty())
-            mPaintedPaths.add(new PaintedPath(new Path(), mPalette.getCurrentPaint()));
     }
 
     private void randomisePalette() {

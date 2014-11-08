@@ -1,20 +1,15 @@
 package com.benjycap.drawshare;
 
 
-import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-
-import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -95,7 +90,8 @@ public class MainActivity extends ActionBarActivity {
         // Put back painted paths from saved instance state
         if (mSavedInstanceState != null) {
             if (mSavedInstanceState.getSerializable(DrawView.EXTRA_PAINTED_PATHS) != null)
-                mDrawView.setPaintedPaths((ArrayList<DrawView.PaintedPath>) mSavedInstanceState.getSerializable(DrawView.EXTRA_PAINTED_PATHS));
+                mDrawView.setPaintedPaths(PaintedPathList.deserializer(
+                        (PaintedPathList.SerializableInstance) mSavedInstanceState.getSerializable(DrawView.EXTRA_PAINTED_PATHS)));
         }
 
         // Set up buttons
@@ -134,7 +130,7 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         if (mDrawView != null)
-            outState.putSerializable(DrawView.EXTRA_PAINTED_PATHS, mDrawView.getPaintedPaths());
+            outState.putSerializable(DrawView.EXTRA_PAINTED_PATHS, mDrawView.getPaintedPaths().getSerializableInstance());
 
         super.onSaveInstanceState(outState);
     }
