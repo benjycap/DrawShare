@@ -3,7 +3,6 @@ package com.benjycap.drawshare;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 
 /**
@@ -25,8 +24,8 @@ public class RemoteDrawReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.hasExtra(EXTRA_PAINTED_PATH_DATA)) {
-            PaintedPathList paintedPaths = PaintedPathList.deserializeForNewDimension(
-                    (PaintedPathList.SerializableInstance)intent.getSerializableExtra(EXTRA_PAINTED_PATH_DATA),
+            PaintedPathList paintedPaths = PaintedPathList.deserializeForDimension(
+                    (PaintedPathList.SerializableInstance) intent.getSerializableExtra(EXTRA_PAINTED_PATH_DATA),
                     mPaintedView.getWidth(), mPaintedView.getHeight());
             mPaintedView.setPaintedPaths(paintedPaths);
         }

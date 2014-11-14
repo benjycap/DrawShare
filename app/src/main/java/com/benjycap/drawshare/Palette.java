@@ -45,12 +45,12 @@ public class Palette {
         mPaint.setStrokeWidth(width);
     }
 
-    public static Paint getDefaultPaint(int color) {
+    public static Paint getDefaultPaint(int color, float strokeWidth) {
         Paint paint = new Paint();
         paint.setColor(color);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5f);
+        paint.setStrokeWidth(strokeWidth);
         paint.setAntiAlias(true);
 
         return paint;

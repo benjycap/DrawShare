@@ -20,7 +20,7 @@ public class DrawView extends PaintedView {
 
     public static final String TAG = "DrawView";
 
-    // TODO Implement dynamic height/width detection into PaintedPathList.deserializeForNewDimension
+    // TODO Implement dynamic height/width detection into PaintedPathList.deserializeForDimension
     public static final float height = 850;
     public static final float width = 540;
 
@@ -80,7 +80,8 @@ public class DrawView extends PaintedView {
                     // Draw path
                     if (currentPath.isEmpty())
                         currentPath.moveTo(event.getX(), event.getY());
-                    currentPath.lineTo(event.getX(), event.getY());
+                    else
+                        currentPath.lineTo(event.getX(), event.getY());
                 }
                 break;
             case MotionEvent.ACTION_UP:
