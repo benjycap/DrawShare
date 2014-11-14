@@ -14,12 +14,17 @@ public class DrawFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      setRetainInstance(true);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_draw, container, false);
+        View v = inflater.inflate(R.layout.fragment_draw, container, false);
+        DrawView drawView = (DrawView)v.findViewById(R.id.userDrawView);
+        drawView.setPalette(((DrawActivity)getActivity()).getActivityPalette());
+        return v;
     }
+
+
+
 }

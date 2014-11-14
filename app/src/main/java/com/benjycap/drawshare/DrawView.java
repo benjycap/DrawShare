@@ -1,28 +1,28 @@
 package com.benjycap.drawshare;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Path;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.Random;
-
 /**
  * Created by Ben on 28/10/2014.
  */
-public class DrawView extends View {
+public class DrawView extends PaintedView {
 
     public static final String TAG = "DrawView";
 
-    public static final String EXTRA_PAINTED_PATHS = "paintedPaths";
-
-    // Painted Paths drawn by the user
-    private PaintedPathList mPaintedPaths;
-    public PaintedPathList getPaintedPaths() { return mPaintedPaths; }
-    public void setPaintedPaths(PaintedPathList paintedPaths) { mPaintedPaths = paintedPaths; }
+    // TODO Implement dynamic height/width detection into PaintedPathList.deserializeForNewDimension
+    public static final float height = 850;
+    public static final float width = 540;
 
     // Palette to be manipulated by the user
     private Palette mPalette;
@@ -33,20 +33,18 @@ public class DrawView extends View {
     // Gesture Detector & Gesture Listener
     private class DoubleTapOnGestureListener extends GestureDetector.SimpleOnGestureListener {
         // Boolean to represent if finger is still down from double tap
-        private boolean isDownFromDoubleTap = false;
+        private boolean isUserDownFromDoubleTap = false;
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            isDownFromDoubleTap = true;
-
+            isUserDownFromDoubleTap = true;
             mPaintedPaths.removeLast();
-
             return true;
         }
     }
     private DoubleTapOnGestureListener mGestureListener = new DoubleTapOnGestureListener();
     private GestureDetector mGestureDetector = new GestureDetector(getContext(), mGestureListener);
 
-    private boolean isDrawingPath;
+    private boolean isUserDrawingPath;
 
     // Constructors
     public DrawView(Context context) {
@@ -56,8 +54,7 @@ public class DrawView extends View {
     public DrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mPaintedPaths = new PaintedPathList();
-        isDrawingPath = false;
+        isUserDrawingPath = false;
     }
 
     @Override
@@ -71,12 +68,12 @@ public class DrawView extends View {
                 break;
             case MotionEvent.ACTION_MOVE:
                 // Skip below in the case user digit is down from double tap
-                if (!mGestureListener.isDownFromDoubleTap) {
+                if (!mGestureListener.isUserDownFromDoubleTap) {
                     // Create new path if digit not already down
-                    if (!isDrawingPath)
+                    if (!isUserDrawingPath)
                         mPaintedPaths.startNewPath(mPalette);
                     // Set down flag as true
-                    isDrawingPath = true;
+                    isUserDrawingPath = true;
 
                     PaintedPath currentPaintedPath = mPaintedPaths.getCurrent();
                     Path currentPath = currentPaintedPath.mPath;
@@ -87,8 +84,8 @@ public class DrawView extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                mGestureListener.isDownFromDoubleTap = false;
-                isDrawingPath = false;
+                mGestureListener.isUserDownFromDoubleTap = false;
+                isUserDrawingPath = false;
                 break;
             default:
                 mainEvent = false;
@@ -104,16 +101,13 @@ public class DrawView extends View {
         return gestureResult || mainEvent;
     }
 
-    private void randomisePalette() {
-        mPalette.setCurrentPaintColorRandom();
-        mPalette.setCurrentStrokeWidth(10 * new Random().nextFloat());
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
-        for (PaintedPath pp : mPaintedPaths) {
-            canvas.drawPath(pp.mPath, pp.mPaint);
-        }
-    }
+        super.onDraw(canvas);
 
+        Intent i = new Intent(RemoteDrawReceiver.ACTION_SEND_PAINTED_PATH_DATA);
+        i.putExtra(RemoteDrawReceiver.EXTRA_PAINTED_PATH_DATA, mPaintedPaths.getSerializableInstance());
+
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
+    }
 }

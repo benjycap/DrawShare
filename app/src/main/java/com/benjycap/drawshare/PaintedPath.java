@@ -10,21 +10,21 @@ import android.graphics.Path;
  */
 public class PaintedPath {
 
-        public final SzPath mPath;
+        public final SerializablePath mPath;
         public final Paint mPaint;
 
-        public PaintedPath(SzPath path, Paint paint) {
+        public PaintedPath(SerializablePath path, Paint paint) {
             mPath = path;
             mPaint = paint;
         }
 
     // Extension to Path class that helps implementation of serializable
-    public static class SzPath extends Path {
+    public static class SerializablePath extends Path {
 
-        // Serializable instance to push to
+        // The serializable instance to push to, which is owned by the PaintedPathList which created this SerializablePath
         PaintedPathList.SerializableInstance mSerializableInstance;
 
-        public SzPath(PaintedPathList.SerializableInstance serializableInstance) {
+        public SerializablePath(PaintedPathList.SerializableInstance serializableInstance) {
             mSerializableInstance = serializableInstance;
         }
 

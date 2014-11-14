@@ -5,8 +5,6 @@ import android.util.Log;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.benjycap.drawshare.PaintedPath.SzPath;
-
 /**
  * Created by Ben on 07/11/2014.
  */
@@ -40,7 +38,7 @@ public class PaintedPathList extends ArrayList<PaintedPath> {
     public void startNewPath(Palette palette) {
         // New path only needed if PaintedPath array is empty or if current Path has been used
         if (isEmpty() || !get(size() - 1).mPath.isEmpty()) {
-            add(new PaintedPath(new SzPath(mSerializableInstance), palette.getCurrentPaint()));
+            add(new PaintedPath(new PaintedPath.SerializablePath(mSerializableInstance), palette.getCurrentPaint()));
             // Serialize
             mSerializableInstance.pushColor(palette.getCurrentPaint().getColor());
         }
@@ -106,25 +104,23 @@ public class PaintedPathList extends ArrayList<PaintedPath> {
         }
     }
 
-    public static PaintedPathList deserializer(SerializableInstance instance) {
-        Log.i(TAG, "ColorList: "+instance.getColors().size());
-        Log.i(TAG, "xMoveTo: "+instance.getxMoveTo().size());
-        Log.i(TAG, "yMoveTo: "+instance.getyMoveTo().size());
-        Log.i(TAG, "xLineTo: "+instance.getxLineTo().size());
-        Log.i(TAG, "yLineTo: "+instance.getyLineTo().size());
+    public static PaintedPathList deserialize(SerializableInstance instance) {
 
         PaintedPathList list = new PaintedPathList();
 
-        for (int i=0; i<instance.getColors().size(); i++) {
+        for (int i=0; i<instance.getxMoveTo().size(); i++) {
+            // Get values
             Integer color = instance.getColors().get(i);
             Float x = instance.getxMoveTo().get(i);
             Float y = instance.getyMoveTo().get(i);
 
-            list.add(new PaintedPath(new SzPath(list.mSerializableInstance),
-                    Palette.getDefaultPaint(color)));
+            // Re-serialize color in new list
             list.getSerializableInstance().pushColor(color);
 
-            PaintedPath pp = list.get(i);
+            // Create new PaintedPath, supplying the new List's serializable member and the re-acquired color
+            PaintedPath pp = new PaintedPath(new PaintedPath.SerializablePath(list.mSerializableInstance),
+                    Palette.getDefaultPaint(color));
+
             pp.mPath.moveTo(x, y);
 
             for (int j=0; j<instance.getxLineTo().get(i).size(); j++) {
@@ -132,6 +128,44 @@ public class PaintedPathList extends ArrayList<PaintedPath> {
                 Float yy = instance.getyLineTo().get(i).get(j);
                 pp.mPath.lineTo(xx, yy);
             }
+
+            // Add de-serialized PaintedPath to List
+            list.add(pp);
+        }
+
+        return list;
+    }
+
+    public static PaintedPathList deserializeForNewDimension(SerializableInstance instance, float containerWidth, float containerHeight) {
+
+        float heightRatio = containerHeight/DrawView.height;
+        float widthRatio = containerWidth/DrawView.width;
+
+        PaintedPathList list = new PaintedPathList();
+
+        for (int i=0; i<instance.getColors().size(); i++) {
+            // Get values
+            Integer color = instance.getColors().get(i);
+            Float x = instance.getxMoveTo().get(i) * widthRatio;
+            Float y = instance.getyMoveTo().get(i) * heightRatio;
+
+            // Re-serialize color in new list
+            list.getSerializableInstance().pushColor(color);
+
+            // Create new PaintedPath, supplying the new List's serializable member and the re-acquired color
+            PaintedPath pp = new PaintedPath(new PaintedPath.SerializablePath(list.mSerializableInstance),
+                    Palette.getDefaultPaint(color));
+
+            pp.mPath.moveTo(x, y);
+
+            for (int j=0; j<instance.getxLineTo().get(i).size(); j++) {
+                Float xx = instance.getxLineTo().get(i).get(j) * widthRatio;
+                Float yy = instance.getyLineTo().get(i).get(j) * heightRatio;
+                pp.mPath.lineTo(xx, yy);
+            }
+
+            // Add de-serialized PaintedPath to List
+            list.add(pp);
         }
 
         return list;

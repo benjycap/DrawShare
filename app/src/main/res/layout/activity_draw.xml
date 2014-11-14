@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".DrawActivity" >
+
+    <FrameLayout
+        android:id="@+id/fragment_draw"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <FrameLayout
+        android:id="@+id/fragment_palette"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true" />
+
+    <FrameLayout
+        android:id="@+id/fragment_remote_draw"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+    <ImageButton
+        android:id="@+id/palette_toggle_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@id/fragment_palette"
+        android:src="@drawable/arrow_right_no_tail"
+        android:background="@android:color/transparent"/>
+
+    <ImageButton
+        android:id="@+id/remote_draw_toggle_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@id/fragment_remote_draw"
+        android:src="@drawable/arrow_right_no_tail"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>
