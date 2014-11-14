@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -76,6 +77,8 @@ public class DrawActivity extends ActionBarActivity {
 
         mPaletteToggleButton = (ImageButton)findViewById(R.id.palette_toggle_button);
         mRemoteDrawToggleButton = (ImageButton)findViewById(R.id.remote_draw_toggle_button);
+
+        setupSaveLoadButtons();
     }
 
     @Override
@@ -158,4 +161,24 @@ public class DrawActivity extends ActionBarActivity {
         buttonParams.topMargin = buttonTopMargin;
     }
 
+    private void setupSaveLoadButtons() {
+        Button saveButton = (Button)findViewById(R.id.save_button);
+        Button loadButton = (Button)findViewById(R.id.load_button);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PaintedPathList.SerializableInstance saveInstance = mDrawFragment.getDrawViewSerializable();
+                SaveLoadHelper.Save(DrawActivity.this, saveInstance, "test");
+            }
+        });
+
+        loadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PaintedPathList.SerializableInstance loadInstance = SaveLoadHelper.Load(DrawActivity.this, "test");
+                mDrawFragment.setDrawViewPaintedPathList(PaintedPathList.deserialize(loadInstance));
+            }
+        });
+    }
 }

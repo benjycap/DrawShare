@@ -25,6 +25,14 @@ public class DrawFragment extends Fragment {
         return v;
     }
 
+    public PaintedPathList.SerializableInstance getDrawViewSerializable() {
+        DrawView drawView = (DrawView)getView().findViewById(R.id.userDrawView);
+        return drawView.getSerializable();
+    }
 
+    public void setDrawViewPaintedPathList(PaintedPathList paintedPaths) {
+        DrawView drawView = (DrawView)getView().findViewById(R.id.userDrawView);
+        drawView.setPaintedPaths(paintedPaths);
+    }
 
 }

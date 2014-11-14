@@ -63,7 +63,9 @@ public class PaintedPathList extends ArrayList<PaintedPath> {
             colors.add(color);
         }
 
-        public void pushWidth(Float width) { widths.add(width); }
+        public void pushWidth(Float width) {
+            widths.add(width);
+        }
 
         public void pushMoveTo(Float x, Float y) {
             xMoveTo.add(x);

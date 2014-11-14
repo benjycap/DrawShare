@@ -22,6 +22,9 @@ public class PaintedView extends View {
         // View needs redrawing after paths have been changed
         invalidate();
     }
+    public PaintedPathList.SerializableInstance getSerializable() {
+        return mPaintedPaths.getSerializableInstance();
+    }
 
     // Constructors
     public PaintedView(Context context) {

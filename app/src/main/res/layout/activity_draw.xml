@@ -23,6 +23,27 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/save_serializable"/>
+
+        <Button
+            android:id="@+id/load_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load_serializable"/>
+
+    </LinearLayout>
+
     <ImageButton
         android:id="@+id/palette_toggle_button"
         android:layout_width="30dp"
