@@ -1,12 +1,12 @@
 package com.benjycap.drawshare;
 
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -18,6 +18,8 @@ public class DrawActivity extends ActionBarActivity {
 
     public static final String TAG = "DrawActivity";
 
+    public static final String ACTION_SEND_PAINTED_PATH_DATA = "com.benjycap.drawshare.ACTION_SEND_PAINTED_PATH_DATA";
+    public static final String EXTRA_PAINTED_PATH_DATA = "com.benjycap.drawshare.EXTRA_PAINTED_PATH_DATA";
     private static final String EXTRA_CURRENT_COLOR = "currentColor";
 
     // Fragments
@@ -52,7 +54,7 @@ public class DrawActivity extends ActionBarActivity {
             mPalette.setCurrentPaintColor(savedColor);
         }
 
-        // Create / Assign fragments
+        // Assign fragments
         FragmentManager fm = getSupportFragmentManager();
         mDrawFragment = (DrawFragment)fm.findFragmentById(R.id.fragment_draw);
         mPaletteFragment = (PaletteFragment)fm.findFragmentById(R.id.fragment_palette);
@@ -74,7 +76,7 @@ public class DrawActivity extends ActionBarActivity {
         }
         ft.commit();
 
-
+        // Assign buttons
         mPaletteToggleButton = (ImageButton)findViewById(R.id.palette_toggle_button);
         mRemoteDrawToggleButton = (ImageButton)findViewById(R.id.remote_draw_toggle_button);
 
@@ -87,6 +89,14 @@ public class DrawActivity extends ActionBarActivity {
         setupHidableButton(mRemoteDrawToggleButton, mRemoteDrawFragment);
 
         super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent.getAction() == ACTION_SEND_PAINTED_PATH_DATA) {
+            PaintedPathList loadedPathCollection =  PaintedPathList.deserialize((PaintedPathList.SerializableInstance)intent.getSerializableExtra(EXTRA_PAINTED_PATH_DATA));
+            mDrawFragment.setDrawViewPaintedPathList(loadedPathCollection);
+        }
     }
 
     @Override
@@ -168,17 +178,18 @@ public class DrawActivity extends ActionBarActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaintedPathList.SerializableInstance saveInstance = mDrawFragment.getDrawViewSerializable();
-                SaveLoadHelper.Save(DrawActivity.this, saveInstance, "test");
+                SaveFileDialogFragment saveFragment = new SaveFileDialogFragment();
+                saveFragment.show(getSupportFragmentManager(), SaveFileDialogFragment.FragmentManagerTag);
             }
         });
 
         loadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PaintedPathList.SerializableInstance loadInstance = SaveLoadHelper.Load(DrawActivity.this, "test");
-                mDrawFragment.setDrawViewPaintedPathList(PaintedPathList.deserialize(loadInstance));
+                Intent i = new Intent(getApplicationContext(), LoadActivity.class);
+                startActivity(i);
             }
         });
     }
+
 }

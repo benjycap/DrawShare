@@ -35,12 +35,6 @@ public class Palette {
         mPaint.setColor(color);
     }
 
-    public void setCurrentPaintColorRandom() {
-        int[] colors = {Color.BLUE, Color.RED, Color.YELLOW, Color.BLACK, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.DKGRAY};
-        int color = new Random().nextInt(colors.length);
-        mPaint.setColor(colors[color]);
-    }
-
     public void setCurrentStrokeWidth(float width) {
         mPaint.setStrokeWidth(width);
     }

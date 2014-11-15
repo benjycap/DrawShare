@@ -28,7 +28,7 @@ public class RemoteDrawFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_remote_draw, container, false);
         PaintedView remoteDrawView = (PaintedView)v.findViewById(R.id.userRemoteDrawView);
 
-        IntentFilter intentFilter = new IntentFilter(RemoteDrawReceiver.ACTION_SEND_PAINTED_PATH_DATA);
+        IntentFilter intentFilter = new IntentFilter(DrawActivity.ACTION_SEND_PAINTED_PATH_DATA);
         mReceiver = new RemoteDrawReceiver(remoteDrawView);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mReceiver, intentFilter);
 

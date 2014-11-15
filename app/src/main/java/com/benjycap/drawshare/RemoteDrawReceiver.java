@@ -12,9 +12,6 @@ public class RemoteDrawReceiver extends BroadcastReceiver {
 
     private static final String TAG = "RemoteDrawReceiver";
 
-    public static final String ACTION_SEND_PAINTED_PATH_DATA = "com.benjycap.drawshare.ACTION_SEND_PAINTED_PATH_DATA";
-    public static final String EXTRA_PAINTED_PATH_DATA = "com.benjycap.drawshare.EXTRA_PAINTED_PATH_DATA";
-
     PaintedView mPaintedView;
 
    public RemoteDrawReceiver(PaintedView paintedView) {
@@ -23,9 +20,9 @@ public class RemoteDrawReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.hasExtra(EXTRA_PAINTED_PATH_DATA)) {
+        if (intent.hasExtra(DrawActivity.EXTRA_PAINTED_PATH_DATA)) {
             PaintedPathList paintedPaths = PaintedPathList.deserializeForDimension(
-                    (PaintedPathList.SerializableInstance) intent.getSerializableExtra(EXTRA_PAINTED_PATH_DATA),
+                    (PaintedPathList.SerializableInstance) intent.getSerializableExtra(DrawActivity.EXTRA_PAINTED_PATH_DATA),
                     mPaintedView.getWidth(), mPaintedView.getHeight());
             mPaintedView.setPaintedPaths(paintedPaths);
         }

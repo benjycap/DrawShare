@@ -4,14 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Path;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 
 /**
  * Created by Ben on 28/10/2014.
@@ -106,8 +102,8 @@ public class DrawView extends PaintedView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Intent i = new Intent(RemoteDrawReceiver.ACTION_SEND_PAINTED_PATH_DATA);
-        i.putExtra(RemoteDrawReceiver.EXTRA_PAINTED_PATH_DATA, mPaintedPaths.getSerializableInstance());
+        Intent i = new Intent(DrawActivity.ACTION_SEND_PAINTED_PATH_DATA);
+        i.putExtra(DrawActivity.EXTRA_PAINTED_PATH_DATA, mPaintedPaths.getSerializableInstance());
 
         LocalBroadcastManager.getInstance(getContext()).sendBroadcast(i);
     }

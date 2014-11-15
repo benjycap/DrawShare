@@ -62,7 +62,7 @@ public class PaletteFragment extends Fragment {
                                 imageButton.getBackground().setAlpha(SELECTED_ALPHA);
                                 // Return previously selected color to original alpha state
                                 ImageButton prevButton = (ImageButton)v.findViewById(R.id.currently_selected_color);
-                                if (prevButton != null) {
+                                if (prevButton != null && prevButton != imageButton) {
                                     prevButton.getBackground().setAlpha(UNSELECTED_ALPHA);
                                     prevButton.setId(View.NO_ID);
                                 }

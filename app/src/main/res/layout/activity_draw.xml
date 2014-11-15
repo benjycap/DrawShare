@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".DrawActivity" >
 
     <FrameLayout
@@ -34,13 +33,13 @@
             android:id="@+id/save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save_serializable"/>
+            android:text="@string/save_serializable_button"/>
 
         <Button
             android:id="@+id/load_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/load_serializable"/>
+            android:text="@string/load_serializable_button"/>
 
     </LinearLayout>
 

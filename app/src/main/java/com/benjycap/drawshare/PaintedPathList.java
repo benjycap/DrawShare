@@ -11,6 +11,10 @@ import java.util.ArrayList;
 // Helper list class to facilitate common tasks and ensure more concise code in DrawView
 public class PaintedPathList extends ArrayList<PaintedPath> {
 
+    public String debug () {
+        return "Size: "+size()+". Reserialized info: "+mSerializableInstance.toString();
+    }
+
     public static final String TAG = "PaintedPathList";
 
     private SerializableInstance mSerializableInstance;
@@ -111,6 +115,11 @@ public class PaintedPathList extends ArrayList<PaintedPath> {
 
         public ArrayList<ArrayList<Float>> getyLineTo() {
             return yLineTo;
+        }
+
+        @Override
+        public String toString() {
+            return "\nColors: "+getColors().size()+"\nWidths: "+getWidths().size()+"\nX, Y: "+getxMoveTo().size()+", "+getyMoveTo().size();
         }
     }
 

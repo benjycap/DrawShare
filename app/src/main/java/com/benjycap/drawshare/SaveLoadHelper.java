@@ -1,6 +1,8 @@
 package com.benjycap.drawshare;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import java.io.FileInputStream;
@@ -14,6 +16,8 @@ import java.io.ObjectOutputStream;
  * Created by Ben on 14/11/2014.
  */
 public class SaveLoadHelper {
+
+    // TODO file extension
 
     private static final String TAG = "SaveLoadHelper";
 
@@ -33,6 +37,8 @@ public class SaveLoadHelper {
 
     public static PaintedPathList.SerializableInstance Load(Context context, String fileName) {
         try {
+            Log.i(TAG, "Number of Files: "+context.getFilesDir().list().length);
+
             FileInputStream fis = context.openFileInput(fileName);
             ObjectInputStream inputStream = new ObjectInputStream(fis);
             PaintedPathList.SerializableInstance loadedInstance = (PaintedPathList.SerializableInstance)inputStream.readObject();
