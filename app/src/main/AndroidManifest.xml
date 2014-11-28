@@ -17,7 +17,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoadActivity"
-            android:label="LoadActivity"/>
+            android:label="Load">
+            <!-- Child of main activity enables back button support in action bar -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.benjycap.drawshare.DrawActivity" />
+        </activity>
     </application>
 
 </manifest>

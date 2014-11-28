@@ -8,5 +8,6 @@
     <string name="cancel_button">Cancel</string>
     <string name="empty_load_adapter">No Files Available!</string>
     <string name="save_file_name_prompt">Save file as:</string>
+    <string name="action_delete">Delete</string>
 
 </resources>

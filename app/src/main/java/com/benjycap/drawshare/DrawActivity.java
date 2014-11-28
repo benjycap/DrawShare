@@ -20,7 +20,20 @@ public class DrawActivity extends ActionBarActivity {
 
     public static final String ACTION_SEND_PAINTED_PATH_DATA = "com.benjycap.drawshare.ACTION_SEND_PAINTED_PATH_DATA";
     public static final String EXTRA_PAINTED_PATH_DATA = "com.benjycap.drawshare.EXTRA_PAINTED_PATH_DATA";
+    public static final String EXTRA_FILE_NAME = "com.benjycap.drawshare.EXTRA_FILE_NAME";
     private static final String EXTRA_CURRENT_COLOR = "currentColor";
+
+
+
+
+    // MetaData
+    private String mWorkingFileName;
+    public String getWorkingFileName() {
+        return mWorkingFileName;
+    }
+    public void setWorkingFileName(String workingFileName) {
+        mWorkingFileName = workingFileName;
+    }
 
     // Fragments
     private DrawFragment mDrawFragment;
@@ -93,9 +106,15 @@ public class DrawActivity extends ActionBarActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        if (intent.getAction() == ACTION_SEND_PAINTED_PATH_DATA) {
+        String action = intent.getAction();
+        String extraLoadedFileName = intent.getStringExtra(EXTRA_FILE_NAME);
+
+        if (action == ACTION_SEND_PAINTED_PATH_DATA) {
             PaintedPathList loadedPathCollection =  PaintedPathList.deserialize((PaintedPathList.SerializableInstance)intent.getSerializableExtra(EXTRA_PAINTED_PATH_DATA));
             mDrawFragment.setDrawViewPaintedPathList(loadedPathCollection);
+        }
+        if (extraLoadedFileName != null) {
+            setWorkingFileName(extraLoadedFileName);
         }
     }
 
@@ -144,7 +163,7 @@ public class DrawActivity extends ActionBarActivity {
 
         RelativeLayout.LayoutParams params =
                 (RelativeLayout.LayoutParams)button.getLayoutParams();
-        if (alignButtonParentRight) {
+        if (alignButtonParentRight) { // Align button right if
             button.setImageResource(R.drawable.arrow_left_no_tail);
             params.addRule(RelativeLayout.LEFT_OF, 0);
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -179,7 +198,7 @@ public class DrawActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 SaveFileDialogFragment saveFragment = new SaveFileDialogFragment();
-                saveFragment.show(getSupportFragmentManager(), SaveFileDialogFragment.FragmentManagerTag);
+                saveFragment.show(getSupportFragmentManager(), SaveFileDialogFragment.TAG);
             }
         });
 

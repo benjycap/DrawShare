@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
 
 /**
@@ -14,15 +15,27 @@ import android.widget.EditText;
  */
 public class SaveFileDialogFragment extends DialogFragment {
 
-    public static final String FragmentManagerTag = "SaveFileDialogFragment";
+
+    // TODO open keyboard when dialog opens
+    public static final String TAG = "SaveFileDialogFragment";
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_fragment_save_file, null);
 
-        builder.setView(inflater.inflate(R.layout.dialog_fragment_save_file, null))
+        // Put DrawActivity instance's working file name in the dialog's edit box
+        String workingFileName = ((DrawActivity)getActivity()).getWorkingFileName();
+        if (workingFileName != null) {
+            EditText editText = (EditText) dialogView.findViewById(R.id.save_dialog_edit_text);
+            editText.setText(workingFileName);
+            // Select all text for easy rename
+            editText.setSelection(0, editText.length());
+        }
+
+        builder.setView(dialogView)
                 .setPositiveButton(R.string.save_serializable_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -34,7 +47,9 @@ public class SaveFileDialogFragment extends DialogFragment {
                         EditText editText = (EditText)getDialog().findViewById(R.id.save_dialog_edit_text);
                         String fileName = editText.getText().toString();
                         // Save File
-                        SaveLoadHelper.Save(getActivity(), saveInstance, fileName);
+                        FileHelper.Save(getActivity(), saveInstance, fileName);
+                        // Update DrawActivity with details of current working file name
+                        ((DrawActivity) getActivity()).setWorkingFileName(fileName);
                     }
                 })
                 .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {

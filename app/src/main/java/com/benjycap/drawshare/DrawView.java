@@ -102,6 +102,7 @@ public class DrawView extends PaintedView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // TODO send newest information only, not entire path. Maybe a listener if entire path needs resending
         Intent i = new Intent(DrawActivity.ACTION_SEND_PAINTED_PATH_DATA);
         i.putExtra(DrawActivity.EXTRA_PAINTED_PATH_DATA, mPaintedPaths.getSerializableInstance());
 
